@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Spotify - Modern Player (Demo)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app" class="app-root">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo-circle">S</div>
+        <div class="brand-text">
+          <h1>SOUND BOX</h1>
+          <span>Premium</span>
+        </div>
+      </div>
+
+      <nav class="side-nav">
+        <button class="nav-btn active" data-target="home">Home</button>
+        <button class="nav-btn" data-target="browse">Browse</button>
+        <button class="nav-btn" data-target="radio">Radio</button>
+      </nav>
+
+      <div class="library">
+        <div class="profile">
+          <img src="https://i.pravatar.cc/100?img=3" alt="profile">
+          <div>
+            <div class="name">Aryan Maurya</div>
+            <div class="email">aryanmaurya044@gmail.com</div>
+          </div>
+        </div>
+
+        <div class="library-menu">
+          <button class="lib-btn" data-action="profile">Profile</button>
+          <button class="lib-btn" data-action="playlists">Playlists</button>
+          <button class="lib-btn" data-action="favourites">Favourites</button>
+          <button class="lib-btn" data-action="recent">Recent</button>
+          <button class="lib-btn" data-action="about">About</button>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">© SoundBox • Demo</div>
+    </aside>
+
+    <!-- Main content -->
+    <div class="main">
+      
+
+      <!-- Top nav -->
+      <header class="topbar">
+        <button id="menuToggle" class="menu-btn">☰</button>
+
+        <div class="left">
+          <button id="homeBtn" class="pill">Home</button>
+          <button class="pill">Discover</button>
+        </div>
+       
+
+
+        <div class="right">
+          <div class="search">
+            <input id="searchInput" placeholder="Search songs, artists, playlists..." />
+            <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </div>
+          <div class="premium-pill">PREMIUM</div>
+        </div>
+      </header>
+
+      <!-- Content area -->
+       <main class="content" id="mainContent">
+
+     
+        <section class="hero">
+          <h2 id="greeting">WELCOME</h2>
+          <p class="sub">Discover new & trending music</p>
+        </section>
+
+        <!-- category cards (Viral, Hollywood Hits, Bollywood, Romantic ..) -->
+        <section class="cards-grid" id="categories"></section>
+
+        <!-- popular songs -->
+        <section class="song-list-section">
+          <div class="section-head">
+            <h3>Popular Songs</h3>
+            <button id="seeAll" class="link-btn">See all</button>
+          </div>
+          <div id="songList" class="song-list"></div>
+        </section>
+
+        <!-- recommended -->
+        <section class="recommended">
+          <h3>Recommended for you</h3>
+          <div id="recommendedGrid" class="recommended-grid"></div>
+        </section>
+      </main>
+    </div>
+    <!-- Playlist Section (hidden initially) -->
+<section id="playlistSection" class="playlist-section" style="display:none;">
+  <div class="section-head">
+    <h3>Your Playlists</h3>
+    <button id="createPlaylistBtn" class="link-btn">+ Create Playlist</button>
+  </div>
+  <div id="playlistContainer" class="playlist-container"></div>
+</section>
+
+
+    <!-- Right pane (queue / suggestions) -->
+    <aside class="rightpane">
+      <div class="queue-head">Queue</div>
+      <div id="queueList" class="queue-list"></div>
+
+      <div class="suggestions">
+        <h4>Suggestions</h4>
+        <div id="suggestionsList"></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Player (fixed bottom) -->
+  <div class="player" id="player">
+    <div class="player-left">
+      <img id="playerCover" src="" alt="cover">
+      <div class="now">
+        <div id="playerTitle" class="title">Nothing Playing</div>
+        <div id="playerArtist" class="artist"></div>
+      </div>
+    </div>
+
+    <div class="player-center">
+      <div class="controls">
+        <button id="prevBtn" class="ctrl">⏮</button>
+        <button id="playPauseBtn" class="play ctrl">▶</button>
+        <button id="nextBtn" class="ctrl">⏭</button>
+        
+      </div>
+      <div class="progress-wrap">
+        <span id="curTime">0:00</span>
+        <input id="progress" type="range" min="0" max="100" value="0">
+        <span id="durTime">0:00</span>
+      </div>
+    </div>
+
+    <div class="player-right">
+      <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8">
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="songs.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+

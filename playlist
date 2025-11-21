@@ -1,0 +1,194 @@
+// 🟢 PLAYLIST SYSTEM
+const playlistSection = document.getElementById('playlistSection');
+const content = document.querySelector('.content');
+const playlistBtn = document.querySelector('[data-action="playlists"]');
+const playlistContainer = document.getElementById('playlistContainer');
+const createPlaylistBtn = document.getElementById('createPlaylistBtn');
+
+// Load playlists from localStorage
+function getPlaylists() {
+  return JSON.parse(localStorage.getItem('playlists') || '[]');
+}
+
+// Save playlists to localStorage
+function savePlaylists(playlists) {
+  localStorage.setItem('playlists', JSON.stringify(playlists));
+}
+
+// Render all playlists
+function renderPlaylists() {
+  const playlists = getPlaylists();
+  playlistContainer.innerHTML = '';
+
+  if (playlists.length === 0) {
+    playlistContainer.innerHTML = `<div style="color:var(--muted);padding:10px;">No playlists yet. Click "Create Playlist" to start!</div>`;
+    return;
+  }
+
+  playlists.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'playlist-card';
+    card.innerHTML = `
+      <img src="${p.cover || 'https://picsum.photos/seed/playlist/200/200'}" alt="cover">
+      <div class="title">${p.name}</div>
+      <div class="count">${p.songs.length} songs</div>
+    `;
+    card.addEventListener('click', () => openPlaylistView(p.id));
+    playlistContainer.appendChild(card);
+  });
+}
+
+// Open playlist section
+playlistBtn.addEventListener('click', () => {
+  content.style.display = 'none';
+  playlistSection.style.display = 'block';
+  renderPlaylists();
+});
+
+// Create playlist popup
+createPlaylistBtn.addEventListener('click', () => {
+  const popup = document.createElement('div');
+  popup.id = 'playlistPopup';
+  popup.innerHTML = `
+    <h3>Create New Playlist</h3>
+    <input type="text" id="playlistNameInput" placeholder="Enter playlist name..." />
+    <button id="savePlaylistBtn">Create</button>
+  `;
+  document.body.appendChild(popup);
+
+  document.getElementById('savePlaylistBtn').addEventListener('click', () => {
+    const name = document.getElementById('playlistNameInput').value.trim();
+    if (!name) return alert('Please enter a playlist name.');
+
+    const playlists = getPlaylists();
+    playlists.push({ id: Date.now(), name, songs: [] });
+    savePlaylists(playlists);
+
+    popup.remove();
+    renderPlaylists();
+  });
+});
+
+// Close popup when clicking outside
+document.addEventListener('click', (e) => {
+  const popup = document.getElementById('playlistPopup');
+  if (popup && !popup.contains(e.target) && !e.target.matches('#createPlaylistBtn')) {
+    popup.remove();
+  }
+});
+
+// Open specific playlist view
+function openPlaylistView(id) {
+  const playlists = getPlaylists();
+  const playlist = playlists.find(p => p.id === id);
+  if (!playlist) return;
+
+  playlistContainer.innerHTML = `
+    <button id="backToPlaylistsBtn" class="link-btn">← Back</button>
+    <h3>${playlist.name}</h3>
+    <div id="playlistSongsContainer"></div>
+  `;
+
+  const songsContainer = document.getElementById('playlistSongsContainer');
+  if (playlist.songs.length === 0) {
+    songsContainer.innerHTML = `<div style="color:var(--muted);padding:10px;">No songs yet.</div>`;
+  } else {
+    playlist.songs.forEach(id => {
+      const s = SONGS.find(x => x.id === id);
+      if (!s) return;
+      const row = document.createElement('div');
+      row.className = 'song-row';
+      row.innerHTML = `
+        <img src="${s.cover}" style="width:60px;height:60px;border-radius:8px">
+        <div class="song-meta">
+          <div class="song-title">${s.title}</div>
+          <div class="song-artist">${s.artist}</div>
+        </div>
+      `;
+      row.addEventListener('dblclick', () => playSongById(s.id));
+      songsContainer.appendChild(row);
+    });
+  }
+
+  // Back button → playlists view
+  document.getElementById('backToPlaylistsBtn').addEventListener('click', renderPlaylists);
+}
+
+
+
+
+//////////////
+.playlist-section {
+  background: rgba(255,255,255,0.02);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+
+.playlist-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.playlist-card {
+  background: rgba(255,255,255,0.03);
+  width: 180px;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.playlist-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255,255,255,0.06);
+}
+.playlist-card img {
+  width: 100%;
+  height: 140px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 8px;
+}
+.playlist-card .title {
+  font-weight: 700;
+}
+.playlist-card .count {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Playlist popup */
+#playlistPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  background: rgba(15,15,15,0.96);
+  border-radius: 12px;
+  padding: 20px;
+  width: 320px;
+  z-index: 2000;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+  animation: fadeInPopup 0.3s ease forwards;
+}
+#playlistPopup input {
+  width: 100%;
+  margin: 8px 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+}
+#playlistPopup button {
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+}
